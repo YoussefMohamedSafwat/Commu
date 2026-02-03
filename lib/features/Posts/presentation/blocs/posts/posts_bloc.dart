@@ -1,9 +1,9 @@
-
 import 'package:cleanarch/core/Error/failures.dart';
 import 'package:cleanarch/core/Strings/failure_strings.dart';
 import 'package:cleanarch/features/Posts/domain/entities/posts.dart';
 import 'package:cleanarch/features/Posts/domain/usecases/get_all_posts.dart';
 import 'package:cleanarch/features/Posts/domain/usecases/get_post_by_id.dart';
+import 'package:cleanarch/features/Posts/domain/usecases/get_post_by_user_id.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,11 +13,13 @@ part 'posts_state.dart';
 class PostsBloc extends Bloc<PostsEvent, PostsState> {
   final GetAllPostsUsecase getAllPostsUsecase;
   final GetPostByIdUsecase getPostByIdUsecase;
+  final GetPostByUserIdUseCase getPostByUserIdUseCase;
   bool isFetchingMore = false;
 
   PostsBloc({
     required this.getAllPostsUsecase,
     required this.getPostByIdUsecase,
+    required this.getPostByUserIdUseCase,
   }) : super(PostsInitial()) {
     on<PostsEvent>((event, emit) async {
       if (event is GetAllPostsEvent) {
@@ -45,12 +47,17 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
         }
       } else if (event is GetPostByIdEvent) {
         emit(PostsLoading());
-
         final response = await getPostByIdUsecase(event.id);
-
         response.fold(
           (failure) => emit(PostsError(message: _mapErrormessage(failure))),
           (post) => emit(PostLoaded(post: post)),
+        );
+      } else if (event is GetPostbyUserIdEvent) {
+        emit(PostsLoading());
+        final response = await getPostByUserIdUseCase(uid: event.uid);
+        response.fold(
+          (failure) => emit(PostsError(message: _mapErrormessage(failure))),
+          (posts) => emit(PostsLoaded(posts: posts)),
         );
       }
     });

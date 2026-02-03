@@ -1,3 +1,4 @@
+import 'package:cleanarch/core/di/di_container.dart' as di;
 import 'package:cleanarch/core/util/go_router_refresh_steam.dart';
 import 'package:cleanarch/core/widgets/navbar/app_bottom_navbar.dart'; // ⭐ Import
 import 'package:cleanarch/features/Posts/presentation/Pages/add_post_update_page.dart';
@@ -9,11 +10,11 @@ import 'package:cleanarch/features/Search/presentation/pages/posts_search_page.d
 import 'package:cleanarch/features/auth/presentation/blocs/bloc/auth_bloc.dart';
 import 'package:cleanarch/features/auth/presentation/pages/auth_page.dart';
 import 'package:cleanarch/features/user/presentation/pages/profile_page.dart';
+import 'package:cleanarch/features/user/presentation/pages/profile_view_page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_provider/go_provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cleanarch/injection_container.dart' as di;
 
 final GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> postsKey = GlobalKey<NavigatorState>();
@@ -75,7 +76,9 @@ class AppRouter {
         },
         routes: [
           GoProviderRoute(
-            providers: [BlocProvider(create: (_) => di.dc<PostsBloc>())],
+            providers: (context, state) => [
+              BlocProvider(create: (_) => di.dc<PostsBloc>()),
+            ],
             name: "postdetail",
             path: "post-detail/:id",
             builder: (context, state) {
@@ -114,6 +117,14 @@ class AppRouter {
         name: "userprofile",
         path: "/user-profile",
         builder: (_, _) => const ProfilePage(),
+      ),
+      GoRoute(
+        name: "profileview",
+        path: "/user-profile-view/:uid",
+        builder: (context, state) {
+          final uid = int.parse(state.pathParameters["uid"]!);
+          return ProfileViewPage(uid: uid);
+        },
       ),
     ],
   );

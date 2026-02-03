@@ -1,5 +1,6 @@
 
 import 'package:cleanarch/core/cubit/current_user_cubit.dart';
+import 'package:cleanarch/core/di/di_container.dart' as di;
 import 'package:cleanarch/core/theming/cubit/theme_cubit_cubit.dart';
 import 'package:cleanarch/features/Posts/presentation/blocs/add_delete_update/bloc/add_delete_update_bloc.dart';
 import 'package:cleanarch/features/auth/presentation/blocs/bloc/auth_bloc.dart';
@@ -7,7 +8,6 @@ import 'package:cleanarch/features/auth/presentation/blocs/cubit/remember_me_cub
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cleanarch/app.dart';
-import 'package:cleanarch/injection_container.dart' as di;
 
 /// Global BLoC providers wrapper
 /// Provides app-wide state management

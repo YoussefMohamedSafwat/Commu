@@ -13,6 +13,9 @@ class UserRepositoryImpl implements UserRepository {
   final RemoteUserDatasource remoteUserDatasource;
   final NetworkInfo networkInfo;
 
+  // In-memory cache to store users fetched during the session
+  final Map<int, UserModel> _memoryCache = {};
+
   UserRepositoryImpl({
     required this.networkInfo,
     required this.localUserDatasource,
@@ -45,16 +48,25 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<Either<Failure, UserModel>> getUserById(int userId) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final UserModel userModel = await remoteUserDatasource.getUserById(
-          userId,
-        );
-        return Right(userModel);
-      } on ServerException {
-        return Left(ServerFailure());
-      }
+    // 1. Check in-memory cache first
+    if (_memoryCache.containsKey(userId)) {
+      return Right(_memoryCache[userId]!);
     }
-    return Left(OfflineFailure());
+
+    // 2. Try fetching from network, caching exceptions if they occur
+    try {
+      final UserModel userModel = await remoteUserDatasource.getUserById(
+        userId,
+      );
+      // 3. Save to in-memory cache
+      _memoryCache[userId] = userModel;
+      return Right(userModel);
+    } on ServerException {
+      return Left(ServerFailure());
+    } catch (e) {
+      // Catch socket exceptions or other network errors
+      // typically SocketException, but we catch generalized to be safe and assume it's a connectivity/server issue
+      return Left(OfflineFailure());
+    }
   }
 }

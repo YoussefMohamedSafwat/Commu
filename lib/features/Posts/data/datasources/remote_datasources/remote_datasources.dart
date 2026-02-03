@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:cleanarch/core/Error/exceptions.dart';
 import 'package:cleanarch/core/constants/urls.dart';
 import 'package:cleanarch/features/Posts/data/models/post_model.dart';
@@ -8,6 +9,7 @@ import 'package:http/http.dart' as http;
 abstract class RemoteDatasources {
   Future<List<PostModel>> getAllPosts(int skip);
   Future<PostModel> getPostById(int postid);
+  Future<List<PostModel>> getPostByUserId(int uid);
   Future<Unit> deletePost(int postId);
   Future<Unit> updatePost(PostModel postModel);
   Future<Unit> addPost(PostModel postModel);
@@ -100,5 +102,24 @@ class RemoteDatasourcesImpl implements RemoteDatasources {
     } else {
       throw ServerException();
     }
+  }
+
+  @override
+  Future<List<PostModel>> getPostByUserId(int uid) async {
+    // TODO: implement getPostByUserId
+    final response = await client.get(
+      Uri.parse("$dummyJsonUrl/posts/user/$uid"),
+      headers: {"Content-Type": "application/json"},
+    );
+    if (response.statusCode == 200) {
+      final List decodedjson = jsonDecode(response.body)['posts'] as List;
+
+      final List<PostModel> postmodels = decodedjson
+          .map<PostModel>((postmodel) => PostModel.fromJson(postmodel))
+          .toList();
+      log("first post : ${postmodels.isEmpty}");
+      return postmodels;
+    }
+    throw ServerException();
   }
 }

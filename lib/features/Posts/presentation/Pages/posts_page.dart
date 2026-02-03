@@ -1,5 +1,4 @@
-import 'package:cleanarch/core/util/comment_sheet_controller.dart';
-import 'package:cleanarch/features/Comments/presentation/pages/comment_page.dart';
+import 'package:cleanarch/core/theming/text_styles.dart';
 import 'package:cleanarch/features/Posts/presentation/blocs/posts/posts_bloc.dart';
 import 'package:cleanarch/core/widgets/loading_widget.dart';
 import 'package:cleanarch/features/Posts/presentation/widgets/posts_page/message_display_widget.dart';
@@ -8,22 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostsPage extends StatelessWidget {
-  const PostsPage({super.key});
+  final bool isPage;
+  const PostsPage({super.key, this.isPage = true});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _buildappbar(context), body: _buildbody());
+    return isPage
+        ? Scaffold(appBar: _buildappbar(context), body: _buildbody())
+        : _buildbody();
   }
-
-  // Widget _buildfloatingbutton(BuildContext context) {
-  //   return Padding(
-  //     padding: EdgeInsetsGeometry.symmetric(vertical: 20),
-  //     child: FloatingActionButton(
-  //       onPressed: () => context.pushNamed("addpost"),
-  //       child: Icon(Icons.add, color: Colors.white),
-  //     ),
-  //   );
-  // }
 
   Widget _buildbody() {
     return Stack(
@@ -35,40 +27,16 @@ class PostsPage extends StatelessWidget {
               if (state is PostsLoading) {
                 return LoadingWidget();
               } else if (state is PostsLoaded) {
-                return PostsList(posts: state.posts);
+                return PostsList(posts: state.posts, isPage: isPage);
               } else if (state is PostsError) {
                 return MessageDisplayWidget(message: state.message);
               }
-              return LoadingWidget();
+              return Center(
+                child: Text("NO Posts yet", style: AppTextStyle.titleText),
+              );
             },
           ),
         ),
-        // ValueListenableBuilder(
-        //   valueListenable: CommentsSheetController.instance.isOpen,
-        //   builder: (context, isopen, child) {
-        //     if (!isopen) return const SizedBox.shrink();
-        //     return DraggableScrollableSheet(
-        //       initialChildSize: 0.8,
-        //       maxChildSize: 0.95,
-        //       minChildSize: 0.4,
-        //       builder: (_, controller) {
-        //         return Container(
-        //           decoration: BoxDecoration(
-        //             color: Theme.of(
-        //               context,
-        //             ).colorScheme.surfaceContainerHighest,
-        //             borderRadius: BorderRadius.vertical(
-        //               top: Radius.circular(25),
-        //             ),
-        //           ),
-        //           child: CommentPage(
-        //             postid: CommentsSheetController.instance.currentPostId!,
-        //           ),
-        //         );
-        //       },
-        //     );
-        //   },
-        // ),
       ],
     );
   }
@@ -76,6 +44,6 @@ class PostsPage extends StatelessWidget {
   AppBar _buildappbar(BuildContext context) =>
       AppBar(title: Text("posts"), elevation: 2, actions: [
 
-    ],
+            ],
   );
 }

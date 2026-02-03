@@ -115,4 +115,17 @@ class PostsRepositoryImpl implements PostsRepository {
       return Left(OfflineFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<Posts>>> getPostByUserId(int uid) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final userposts = await remoteDatasources.getPostByUserId(uid);
+        return Right(userposts);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    }
+    return Left(OfflineFailure());
+  }
 }

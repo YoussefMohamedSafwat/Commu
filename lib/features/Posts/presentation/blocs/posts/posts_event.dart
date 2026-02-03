@@ -11,6 +11,11 @@ class GetAllPostsEvent extends PostsEvent {}
 
 class GetMorePostsEvent extends PostsEvent {}
 
+class GetPostbyUserIdEvent extends PostsEvent {
+  final int uid;
+ const  GetPostbyUserIdEvent(this.uid); 
+}
+
 class GetPostByIdEvent extends PostsEvent {
   final int id;
 

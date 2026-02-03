@@ -1,5 +1,5 @@
 import 'package:cleanarch/features/Comments/presentation/widgets/comment_widget.dart';
-import 'package:cleanarch/features/Reacts/presentation/widgets/React_container.dart';
+import 'package:cleanarch/features/Reacts/presentation/widgets/react_container.dart';
 import 'package:flutter/material.dart';
 
 class ReactList extends StatelessWidget {

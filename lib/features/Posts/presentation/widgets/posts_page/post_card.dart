@@ -1,24 +1,26 @@
+import 'package:cleanarch/core/di/di_container.dart' as di;
 import 'package:cleanarch/core/theming/text_styles.dart';
 import 'package:cleanarch/features/Posts/presentation/widgets/posts_page/tags_list.dart';
-import 'package:cleanarch/features/Reacts/presentation/widgets/React_list.dart';
+import 'package:cleanarch/features/Reacts/presentation/widgets/react_list.dart';
 import 'package:cleanarch/features/user/presentation/blocs/bloc/user_bloc.dart';
 import 'package:cleanarch/features/user/presentation/widgets/user_widget.dart';
-import 'package:cleanarch/injection_container.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class PostCard extends StatelessWidget {
   final int postId;
+  final int userId;
   final String title;
   final String body;
   final List<String> tags;
-
   const PostCard({
     super.key,
     required this.postId,
     required this.title,
     required this.body,
     required this.tags,
+    required this.userId,
   });
 
   @override
@@ -34,8 +36,16 @@ class PostCard extends StatelessWidget {
           children: [
             BlocProvider(
               create: (context) =>
-                  di.dc<UserBloc>()..add(GetUserByIdEvent(userId: postId)),
-              child: UserWidget(postId: postId),
+                  di.dc<UserBloc>()..add(GetUserByIdEvent(userId: userId)),
+              child: InkWell(
+                child: UserWidget(isUser: false),
+                onTap: () {
+                  context.goNamed(
+                    "profileview",
+                    pathParameters: {"uid": "$userId"},
+                  );
+                },
+              ),
             ),
 
             // title

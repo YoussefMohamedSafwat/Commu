@@ -40,7 +40,7 @@ class _AppContent extends StatelessWidget {
         } else if (state is AuthLogOut) {
           context.read<CurrentUserCubit>().clearUser();
         }
-      },
+        },
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
           return MaterialApp.router(

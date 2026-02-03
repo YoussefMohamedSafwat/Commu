@@ -1,8 +1,8 @@
+import 'package:cleanarch/core/di/di_container.dart' as di;
 import 'package:cleanarch/core/theming/text_styles.dart';
 import 'package:cleanarch/features/Comments/presentation/blocs/commentbloc/bloc/comment_bloc.dart';
 import 'package:cleanarch/features/Comments/presentation/widgets/add_comment.dart';
 import 'package:cleanarch/features/Comments/presentation/widgets/comment_list.dart';
-import 'package:cleanarch/injection_container.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,16 +23,10 @@ class CommentPage extends StatelessWidget {
           top: 10,
         ),
         child: BlocProvider(
-          create: (context) =>
-              di.dc<CommentBloc>()..add(GetCommentsEvent(postId: postid)),
+          create: (context) => di.dc<CommentBloc>()..add(GetCommentsEvent(postId: postid)),
           child: Column(
             children: [
-              Text(
-                "Comments",
-                style: AppTextStyle.titleText.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+              Text("Comments", style: AppTextStyle.titleText.copyWith(fontWeight: FontWeight.w700)),
               const SizedBox(height: 10),
 
               Expanded(child: CommentList()),
