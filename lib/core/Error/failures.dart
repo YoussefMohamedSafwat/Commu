@@ -24,3 +24,10 @@ class InvalidUserFailure extends Failure {
   @override
   List<Object?> get props => [];
 }
+
+class DefaultFailure extends Failure {
+  final String message;
+  @override
+  List<Object?> get props => [message];
+  DefaultFailure({required this.message});
+}

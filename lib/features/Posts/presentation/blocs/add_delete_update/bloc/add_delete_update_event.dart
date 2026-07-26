@@ -8,19 +8,41 @@ abstract class AddDeleteUpdateEvent extends Equatable {
 }
 
 class AddEvent extends AddDeleteUpdateEvent {
-  final Posts post;
+  final String title;
+  final String body;
+  final List<String> tags;
+  final List<PostImage> images;
+  final String userId;
 
-  const AddEvent(this.post);
+  const AddEvent({
+    required this.title,
+    required this.body,
+    required this.tags,
+    required this.images,
+    required this.userId,
+  });
+
   @override
-  List<Object> get props => [post];
+  List<Object> get props => [title, body, tags, images, userId];
 }
 
 class UpdateEvent extends AddDeleteUpdateEvent {
-  final Posts post;
-  const UpdateEvent(this.post);
+  final Posts existingPost;
+  final String title;
+  final String body;
+  final List<String> tags;
+  final List<PostImage> images;
+
+  const UpdateEvent({
+    required this.existingPost,
+    required this.title,
+    required this.body,
+    required this.tags,
+    required this.images,
+  });
 
   @override
-  List<Object> get props => [post];
+  List<Object> get props => [existingPost, title, body, tags, images];
 }
 
 class DeleteEvent extends AddDeleteUpdateEvent {

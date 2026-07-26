@@ -8,7 +8,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class PostsList extends StatefulWidget {
   final List<Posts> posts;
   final bool isPage;
-  const PostsList({super.key, required this.posts, this.isPage = true});
+  final Future<void> Function()? onRefresh;
+  final VoidCallback? onLoadMore;
+  final bool shrinkWrap;
+
+  const PostsList({
+    super.key,
+    required this.posts,
+    this.isPage = true,
+    this.shrinkWrap = false,
+    this.onRefresh,
+    this.onLoadMore,
+  });
 
   @override
   State<PostsList> createState() => _PostsListState();
@@ -32,7 +43,11 @@ class _PostsListState extends State<PostsList> {
   void _loadMore() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      context.read<PostsBloc>().add(GetMorePostsEvent());
+      if (widget.onLoadMore != null) {
+        widget.onLoadMore!();
+      } else {
+        context.read<PostsBloc>().add(GetMorePostsEvent());
+      }
     }
   }
 
@@ -42,28 +57,42 @@ class _PostsListState extends State<PostsList> {
         ? Center(
             child: Text(
               "No Posts Yet!",
-              style: AppTextStyle.normalText.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style: context.normalText.copyWith(fontWeight: FontWeight.w500),
             ),
           )
-        : ListView.separated(
-            controller: _scrollController,
-            shrinkWrap: !widget.isPage,
-            physics: widget.isPage
-                ? ScrollPhysics()
-                : NeverScrollableScrollPhysics(),
-            itemCount: widget.posts.length,
-            itemBuilder: (context, index) {
-              return PostCard(
-                title: widget.posts[index].title,
-                userId: widget.posts[index].userId,
-                body: widget.posts[index].body,
-                tags: widget.posts[index].tags,
-                postId: widget.posts[index].id,
-              );
+        : RefreshIndicator(
+            onRefresh: () async {
+              if (widget.onRefresh != null) {
+                await widget.onRefresh!();
+              } else {
+                context.read<PostsBloc>().add(GetAllPostsEvent());
+                await context.read<PostsBloc>().stream.firstWhere(
+                  (state) => state is! PostsLoading,
+                );
+              }
             },
-            separatorBuilder: (context, index) => Divider(thickness: 0.5),
+            child: ListView.separated(
+              controller: widget.isPage ? _scrollController : null,
+              shrinkWrap: widget.shrinkWrap,
+              physics: widget.shrinkWrap
+                  ? const NeverScrollableScrollPhysics()
+                  : const AlwaysScrollableScrollPhysics(),
+              itemCount: widget.posts.length,
+              itemBuilder: (context, index) {
+                return PostCard(
+                  title: widget.posts[index].title,
+                  userId: widget.posts[index].userId,
+                  body: widget.posts[index].body,
+                  tags: widget.posts[index].tags ?? [],
+                  postId: widget.posts[index].id,
+                  reactCount: widget.posts[index].reactCount,
+                  commentCount: widget.posts[index].commentCount,
+                  imagesUrl: widget.posts[index].imagesUrl,
+                );
+              },
+              separatorBuilder: (context, index) =>
+                  const Divider(thickness: 0.5),
+            ),
           );
   }
 }

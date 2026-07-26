@@ -1,5 +1,5 @@
 import 'package:cleanarch/core/cubit/current_user_cubit.dart';
-import 'package:cleanarch/core/theming/colors.dart';
+import 'package:cleanarch/core/theming/app_theme_extension.dart';
 import 'package:cleanarch/core/widgets/navbar/navbar_item.dart';
 import 'package:cleanarch/core/widgets/navbar/profile_nav_item.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +45,7 @@ class CustomBottomNavBar extends StatelessWidget {
           ),
 
           ProfileNavItem(
-            profileImageUrl: context.read<CurrentUserCubit>().state!.imageUrl,
+            profileImageUrl: context.watch<CurrentUserCubit>().state?.imageUrl,
             isActive: currentIndex == 2,
             onTap: () => context.go("/user-profile"),
           ),
@@ -63,7 +63,7 @@ class CustomBottomNavBar extends StatelessWidget {
         width: 45,
         height: 45,
         decoration: BoxDecoration(
-          color: AppColors.primaryColor,
+          color: context.primaryColor,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(

@@ -7,7 +7,7 @@ Future<bool> openConfirmDialog(BuildContext context, String title) async {
     context: context,
     builder: (context) {
       return AlertDialog(
-        content: Text(title, style: AppTextStyle.buttonText),
+        content: Text(title, style: context.normalTextHigh),
 
         actions: [
           TextButton(
@@ -15,14 +15,14 @@ Future<bool> openConfirmDialog(BuildContext context, String title) async {
               confirm = true;
               Navigator.of(context).pop();
             },
-            child: Text("Confirm", style: AppTextStyle.normalText),
+            child: Text("Confirm", style: context.normalText),
           ),
           TextButton(
             onPressed: () {
               confirm = false;
               Navigator.of(context).pop();
             },
-            child: Text("Cancel", style: AppTextStyle.normalText),
+            child: Text("Cancel", style: context.normalText),
           ),
         ],
       );

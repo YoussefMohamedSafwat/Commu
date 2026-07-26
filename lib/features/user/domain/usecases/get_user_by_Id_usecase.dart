@@ -7,7 +7,7 @@ class GetUserByIdUsecase {
   final UserRepository userRepository;
   GetUserByIdUsecase({required this.userRepository});
 
-  Future<Either<Failure, User>> call(int userId) async {
+  Future<Either<Failure, User>> call(String userId) async {
     return await userRepository.getUserById(userId);
   }
 }

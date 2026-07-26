@@ -16,4 +16,15 @@ class UserLoadedState extends UserState {
   const UserLoadedState({required this.user});
 }
 
-class UserErrorState extends UserState {}
+class UserErrorState extends UserState {
+  final String message;
+  const UserErrorState({this.message = 'An error occurred'});
+}
+
+class SuggestedUsersLoadedState extends UserState {
+  final List<User> users;
+  const SuggestedUsersLoadedState({required this.users});
+
+  @override
+  List<Object> get props => [users];
+}

@@ -9,7 +9,7 @@ class AddCommentUsecase {
   Future<Either<Failure, Comment>> call({
     required String commentbody,
     required int postid,
-    required int userid,
+    required String userid,
   }) async {
     return await repository.addComment(
       commentbody: commentbody,

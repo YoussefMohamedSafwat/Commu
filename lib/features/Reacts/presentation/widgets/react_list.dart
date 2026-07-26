@@ -4,16 +4,21 @@ import 'package:flutter/material.dart';
 
 class ReactList extends StatelessWidget {
   final int postId;
-  const ReactList({super.key, required this.postId});
+  final int commentCount;
+  final int reactCount;
+  const ReactList({
+    super.key,
+    required this.postId,
+    required this.commentCount,
+    required this.reactCount,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        ReactContainer(islike: true),
+        ReactContainer(postId: postId),
         SizedBox(width: 10),
-        ReactContainer(islike: false),
-        Spacer(),
         CommentWidget(postId: postId),
       ],
     );

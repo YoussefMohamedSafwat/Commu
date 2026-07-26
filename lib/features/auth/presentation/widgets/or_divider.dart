@@ -1,4 +1,4 @@
-import 'package:cleanarch/core/theming/text_styles.dart';
+import 'package:cleanarch/core/theming/app_theme_extension.dart';
 import 'package:flutter/material.dart';
 
 class OrDivider extends StatelessWidget {
@@ -7,15 +7,30 @@ class OrDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dividerColor = context.isDark
+        ? Colors.white.withValues(alpha: 0.08)
+        : const Color(0xFFE2E8F0);
+    final textColor = context.isDark
+        ? Colors.white.withValues(alpha: 0.4)
+        : const Color(0xFF64748B);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(width: parentWidth * 0.36, child: Divider(thickness: 2)),
+        Expanded(child: Divider(color: dividerColor)),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Text("Or", style: AppTextStyle.normalText),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            "Or connect with",
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: textColor,
+              letterSpacing: 0.5,
+            ),
+          ),
         ),
-        SizedBox(width: parentWidth * 0.36, child: Divider(thickness: 2)),
+        Expanded(child: Divider(color: dividerColor)),
       ],
     );
   }

@@ -1,0 +1,1 @@
+enum SearchFilter { tags, users }

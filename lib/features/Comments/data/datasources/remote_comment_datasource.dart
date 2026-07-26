@@ -1,10 +1,8 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'package:cleanarch/core/Error/exceptions.dart';
-import 'package:cleanarch/core/constants/urls.dart';
 import 'package:cleanarch/features/Comments/data/models/comment_model.dart';
 import 'package:dartz/dartz.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class RemoteCommentDatasource {
   Future<List<CommentModel>> getCommentsByPostId(int postId);
@@ -13,67 +11,42 @@ abstract class RemoteCommentDatasource {
     required int commentID,
     required String commentBody,
   });
-  Future<CommentModel> addComment({
-    required String commentbody,
-    required int postid,
-    required int userid,
-  });
+  Future<CommentModel> addComment({required CommentModel commentmodel});
 }
 
 class RemoteCommentDatasourceImpl implements RemoteCommentDatasource {
-  final http.Client client;
+  final SupabaseClient client;
   RemoteCommentDatasourceImpl({required this.client});
   @override
   Future<List<CommentModel>> getCommentsByPostId(int postId) async {
-    final response = await client.get(
-      Uri.parse("$dummyJsonUrl/comments/post/$postId"),
-    );
-    if (response.statusCode == 200) {
-      final List<dynamic> jsondata =
-          jsonDecode(response.body)['comments'] as List;
-      final commentModels = jsondata
-          .map<CommentModel>((jsonitem) => CommentModel.fromJson(jsonitem))
-          .toList();
-      return commentModels;
-    } else {
-      throw ServerException();
-    }
+    final comments = await client
+        .from('comments')
+        .select()
+        .eq('post_id', postId)
+        .order('created_at', ascending: false);
+
+    return comments
+        .map<CommentModel>((comment) => CommentModel.fromJson(comment))
+        .toList();
   }
 
   @override
-  Future<CommentModel> addComment({
-    required String commentbody,
-    required int postid,
-    required int userid,
-  }) async {
-    final body = {
-      'body': commentbody,
-      'postId': postid.toString(),
-      'userId': userid.toString(),
-    };
-    final response = await client.post(
-      Uri.parse("$dummyJsonUrl/comments/add"),
-      body: body,
+  Future<CommentModel> addComment({required CommentModel commentmodel}) async {
+    debugPrint(
+      "adding a comment : ${commentmodel.postId}${commentmodel.likes}${commentmodel.id} ${commentmodel.body} ${commentmodel.userId}",
     );
-    if (response.statusCode == 201) {
-      final jsondata = jsonDecode(response.body);
-      return CommentModel.fromJson(jsondata);
-    } else {
-      throw ServerException();
-    }
+    final response = await client
+        .from('comments')
+        .insert(commentmodel.toJson())
+        .select()
+        .single();
+    return CommentModel.fromJson(response);
   }
 
   @override
   Future<Unit> deleteComment(int commentId) async {
-    final response = await client.delete(
-      Uri.parse('$dummyJsonUrl/comments/$commentId'),
-    );
-
-    if (response.statusCode == 200) {
-      return Future.value(unit);
-    }
-    log(response.body);
-    throw ServerException();
+    await client.from('comments').delete().eq('id', commentId);
+    return Future.value(unit);
   }
 
   @override
@@ -81,16 +54,12 @@ class RemoteCommentDatasourceImpl implements RemoteCommentDatasource {
     required int commentID,
     required String commentBody,
   }) async {
-    final response = await client.put(
-      Uri.parse("$dummyJsonUrl/comments/$commentID"),
-      body: {'body': commentBody},
-    );
-
-    if (response.statusCode == 200) {
-      final jsondata = jsonDecode(response.body);
-      return CommentModel.fromJson(jsondata);
-    } else {
-      throw ServerException();
-    }
+    final response = await client
+        .from('comments')
+        .update({'body': commentBody})
+        .eq('id', commentID)
+        .select()
+        .single();
+    return CommentModel.fromJson(response);
   }
 }

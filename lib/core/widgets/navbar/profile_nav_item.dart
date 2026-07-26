@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cleanarch/core/theming/colors.dart';
+import 'package:cleanarch/core/theming/app_theme_extension.dart';
 import 'package:flutter/material.dart';
 
 class ProfileNavItem extends StatelessWidget {
@@ -28,7 +28,7 @@ class ProfileNavItem extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: isActive ? AppColors.primaryColor : Colors.transparent,
+              color: isActive ? context.primaryColor : Colors.transparent,
               width: 2,
             ),
           ),
@@ -44,7 +44,7 @@ class ProfileNavItem extends StatelessWidget {
                 : Icon(
                     Icons.person,
                     size: 30,
-                    color: isActive ? AppColors.primaryColor : Colors.grey,
+                    color: isActive ? context.primaryColor : Colors.grey,
                   ),
           ),
         ),

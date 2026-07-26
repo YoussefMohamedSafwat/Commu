@@ -8,5 +8,6 @@ abstract class PostsRepository {
   Future<Either<Failure, Unit>> deletePost(int postId);
   Future<Either<Failure, List<Posts>>> getAllposts(int skip);
   Future<Either<Failure, Posts>> getPostById(int postid);
-  Future<Either<Failure, List<Posts>>> getPostByUserId(int uid);
+  Future<Either<Failure, List<Posts>>> getPostByUserId(String uid);
+  Future<Either<Failure, List<Posts>>> getLikedPosts(String uid);
 }

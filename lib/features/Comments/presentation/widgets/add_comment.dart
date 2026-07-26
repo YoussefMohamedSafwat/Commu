@@ -65,7 +65,7 @@ class _AddCommentState extends State<AddComment> {
               if (widget.isEditing) {
                 context.read<CommentBloc>().add(
                   UpdateCommentEvent(
-                    commentID: widget.comment!.id,
+                    commentID: widget.comment?.id ?? 0,
                     commentBody: _controller.text,
                   ),
                 );

@@ -16,7 +16,7 @@ class CommentList extends StatelessWidget {
         if (state is CommentLoading) {
           return LoadingWidget();
         } else if (state is CommentLoaded) {
-          return _buildCommentList(state.comments);
+          return _buildCommentList(context, state.comments);
         } else if (state is CommentError) {
           return Center(child: Text(state.message));
         }
@@ -25,12 +25,12 @@ class CommentList extends StatelessWidget {
     );
   }
 
-  Widget _buildCommentList(List<Comment> comments) {
+  Widget _buildCommentList(BuildContext context, List<Comment> comments) {
     return comments.isEmpty
         ? Center(
             child: Text(
               "No comments on this post ",
-              style: AppTextStyle.commentText,
+              style: context.commentText,
             ),
           )
         : ListView.separated(

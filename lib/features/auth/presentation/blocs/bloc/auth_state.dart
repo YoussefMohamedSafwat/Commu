@@ -25,3 +25,9 @@ class AuthError extends AuthState {
 }
 
 class AuthLogOut extends AuthState {}
+
+class AuthPasswordResetSuccess extends AuthState {}
+
+class AuthUpdatePasswordSuccess extends AuthState {}
+
+class AuthSignUpRequiresVerification extends AuthState {}

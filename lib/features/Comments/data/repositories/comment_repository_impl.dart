@@ -35,7 +35,7 @@ class CommentRepositoryImpl implements CommentRepository {
   Future<Either<Failure, CommentModel>> addComment({
     required String commentbody,
     required int postid,
-    required int userid,
+    required String userid,
   }) async {
     if (await networkInfo.isConnected == false) {
       return Left(OfflineFailure());
@@ -43,14 +43,20 @@ class CommentRepositoryImpl implements CommentRepository {
 
     try {
       final commentModel = await remoteDataSource.addComment(
-        postid: postid,
-        userid: userid,
-        commentbody: commentbody,
+        commentmodel: CommentModel(
+          body: commentbody,
+          postId: postid,
+          likes: 0,
+          userId: userid,
+          createdAt: DateTime.now().toIso8601String(),
+        ),
       );
 
       return Right(commentModel);
     } on ServerException {
       return Left(ServerFailure());
+    } catch (e) {
+      return Left(DefaultFailure(message: e.toString()));
     }
   }
 
@@ -64,6 +70,8 @@ class CommentRepositoryImpl implements CommentRepository {
       return Right(response);
     } on ServerException {
       return Left(ServerFailure());
+    } catch (e) {
+      return Left(DefaultFailure(message: e.toString()));
     }
   }
 

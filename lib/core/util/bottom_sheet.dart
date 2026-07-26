@@ -1,7 +1,6 @@
-import 'package:cleanarch/features/Comments/presentation/pages/comment_page.dart';
 import 'package:flutter/material.dart';
 
-void openComments(BuildContext context, int postid) {
+void openbBottomSheet(BuildContext context, Widget child) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -23,7 +22,7 @@ void openComments(BuildContext context, int postid) {
               color: Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
             ),
-            child: CommentPage(postid: postid),
+            child: child,
           );
         },
       );

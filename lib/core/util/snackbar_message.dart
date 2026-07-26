@@ -1,4 +1,4 @@
-import 'package:cleanarch/core/theming/colors.dart';
+import 'package:cleanarch/core/theming/app_theme_extension.dart';
 import 'package:flutter/material.dart';
 
 class SnackBarMessage {
@@ -9,7 +9,7 @@ class SnackBarMessage {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message, style: TextStyle(color: Colors.white)),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: context.primaryColor,
       ),
     );
   }
@@ -21,7 +21,7 @@ class SnackBarMessage {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message, style: TextStyle(color: Colors.white)),
-        backgroundColor: AppColors.deleteBtnColor,
+        backgroundColor: context.deleteBtnColor,
       ),
     );
   }

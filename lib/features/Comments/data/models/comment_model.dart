@@ -1,31 +1,32 @@
 import 'package:cleanarch/features/Comments/domain/entities/comment.dart';
-import 'package:cleanarch/features/user/data/models/user_model.dart';
 
 class CommentModel extends Comment {
   CommentModel({
-    required super.id,
+    super.id,
     required super.body,
     required super.postId,
     required super.likes,
-    required super.user,
+    required super.userId,
+    required super.createdAt,
   });
   factory CommentModel.fromJson(Map<String, dynamic> json) {
     return CommentModel(
-      id: int.parse(json['id'].toString()),
+      id: json['id'],
       body: json['body'],
-      postId: int.parse(json['postId'].toString()),
-      likes: json['likes'] == null ? 0 : int.parse(json['likes'].toString()),
-      user: UserModel.fromJson(json['user']),
+      postId: json['post_id'],
+      likes: json['likes'],
+      userId: json['user_id'],
+      createdAt: json['created_at'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'body': body,
-      'postId': postId,
+      'post_id': postId,
       'likes': likes,
-      'user': (user as UserModel).toJson(),
+      'user_id': userId,
+      'created_at': createdAt,
     };
   }
 }

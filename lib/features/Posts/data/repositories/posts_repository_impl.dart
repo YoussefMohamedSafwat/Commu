@@ -9,6 +9,7 @@ import 'package:cleanarch/features/Posts/data/models/post_model.dart';
 import 'package:cleanarch/features/Posts/domain/entities/posts.dart';
 import 'package:cleanarch/features/Posts/domain/repositories/posts_repository.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 
 typedef DeleteOrUpdateOrAddPost = Future<Unit> Function();
 
@@ -31,7 +32,11 @@ class PostsRepositoryImpl implements PostsRepository {
       title: post.title,
       tags: post.tags,
       views: post.views,
+      imagesUrl: post.imagesUrl,
       userId: post.userId,
+      createdAt: post.createdAt,
+      reactCount: post.reactCount,
+      commentCount: post.commentCount,
     );
 
     return await _postprocess(() {
@@ -55,6 +60,8 @@ class PostsRepositoryImpl implements PostsRepository {
         return Right(remoteposts);
       } on ServerException {
         return Left(ServerFailure());
+      } catch (error) {
+        return Left(DefaultFailure(message: error.toString()));
       }
     } else {
       try {
@@ -94,7 +101,11 @@ class PostsRepositoryImpl implements PostsRepository {
       title: post.title,
       tags: post.tags,
       views: post.views,
+      imagesUrl: post.imagesUrl,
       userId: post.userId,
+      createdAt: post.createdAt,
+      commentCount: post.commentCount,
+      reactCount: post.reactCount,
     );
     return await _postprocess(() {
       return remoteDatasources.updatePost(postModel);
@@ -110,6 +121,8 @@ class PostsRepositoryImpl implements PostsRepository {
         return Right(unit);
       } on ServerException {
         return Left(ServerFailure());
+      } catch (e) {
+        return Left(DefaultFailure(message: e.toString()));
       }
     } else {
       return Left(OfflineFailure());
@@ -117,7 +130,7 @@ class PostsRepositoryImpl implements PostsRepository {
   }
 
   @override
-  Future<Either<Failure, List<Posts>>> getPostByUserId(int uid) async {
+  Future<Either<Failure, List<Posts>>> getPostByUserId(String uid) async {
     if (await networkInfo.isConnected) {
       try {
         final userposts = await remoteDatasources.getPostByUserId(uid);
@@ -127,5 +140,21 @@ class PostsRepositoryImpl implements PostsRepository {
       }
     }
     return Left(OfflineFailure());
+  }
+
+  @override
+  Future<Either<Failure, List<Posts>>> getLikedPosts(String uid) async {
+    if (!await networkInfo.isConnected) return Left(OfflineFailure());
+
+    try {
+      final posts = await remoteDatasources.getLikedPosts(uid);
+      debugPrint("returning liked posts: $posts");
+      return Right(posts);
+    } on ServerException {
+      return Left(ServerFailure());
+    } catch (e) {
+      debugPrint(e.toString());
+      return Left(DefaultFailure(message: e.toString()));
+    }
   }
 }

@@ -29,7 +29,7 @@ class AuthRedirectGuard {
       (user) {
         // If on auth pages, redirect to posts
         if (isAuthRoute) {
-          return '/posts';
+          return '/page';
         }
         return null; // Stay on current route
       },

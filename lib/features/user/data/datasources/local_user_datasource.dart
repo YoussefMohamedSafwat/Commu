@@ -36,7 +36,7 @@ class LocalUserDataSourceImpl implements LocalUserDatasource {
 
   @override
   Future<Unit> clearCachedUser() async {
-     await sharedPreferences.remove(cachedUser);
-      return Future.value(unit);
+    await sharedPreferences.remove(cachedUser);
+    return Future.value(unit);
   }
 }

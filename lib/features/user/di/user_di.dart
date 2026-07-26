@@ -6,17 +6,33 @@ import 'package:cleanarch/features/user/domain/repositories/user_repository.dart
 import 'package:cleanarch/features/user/domain/usecases/cache_user_usecase.dart';
 import 'package:cleanarch/features/user/domain/usecases/clear_cached_user_usecase.dart';
 import 'package:cleanarch/features/user/domain/usecases/get_cached_user_usecase.dart';
+import 'package:cleanarch/features/user/domain/usecases/get_suggested_users_usecase.dart';
 import 'package:cleanarch/features/user/domain/usecases/get_user_by_Id_usecase.dart';
+import 'package:cleanarch/features/user/domain/usecases/update_user_usecase.dart';
+import 'package:cleanarch/core/usecases/upload_image_usecase.dart';
 import 'package:cleanarch/features/user/presentation/blocs/bloc/user_bloc.dart';
 
 void initUser() {
   //Bloc
-  dc.registerFactory(() => UserBloc(getUserByIdUsecase: dc()));
+  dc.registerFactory(
+    () => UserBloc(
+      getUserByIdUsecase: dc(),
+      updateUserUsecase: dc(),
+      uploadImageUsecase: dc(),
+      cacheUserUsecase: dc(),
+      getSuggestedUsersUsecase: dc(),
+    ),
+  );
   // Usecases
   dc.registerLazySingleton(() => CacheUserUsecase(userRepository: dc()));
   dc.registerLazySingleton(() => ClearCachedUserUsecase(userRepository: dc()));
   dc.registerLazySingleton(() => GetCachedUserUsecase(userRepository: dc()));
   dc.registerLazySingleton(() => GetUserByIdUsecase(userRepository: dc()));
+  dc.registerLazySingleton(() => UpdateUserUsecase(userRepository: dc()));
+  dc.registerLazySingleton(() => UploadImageUsecase(userRepository: dc()));
+  dc.registerLazySingleton(
+    () => GetSuggestedUsersUsecase(userRepository: dc()),
+  );
 
   // repositores
   dc.registerLazySingleton<UserRepository>(

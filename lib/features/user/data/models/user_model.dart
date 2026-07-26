@@ -5,31 +5,39 @@ class UserModel extends User {
     required super.id,
     required super.username,
     required super.email,
-    super.firstName,
-    super.lastName,
+    super.name,
+    super.bio,
     super.gender,
     super.imageUrl,
+    super.backgroundUrl,
+    super.followersCount,
+    super.followingCount,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: int.parse(json['id'].toString()),
+      id: json['id'],
       username: json['username'],
       email: json['email'] ?? "",
-      firstName: json['firstName'],
-      lastName: json['lastName'],
+      name: json['name'],
+      bio: json['bio'],
       gender: json['gender'],
-      imageUrl: json['image'],
+      imageUrl: json['image_url'],
+      backgroundUrl: json['background_url'],
+      followersCount: json['followers_count'] ?? 0,
+      followingCount: json['following_count'] ?? 0,
     );
   }
-
   Map<String, dynamic> toJson() => {
     'id': id,
     'username': username,
     'email': email,
-    'firstName': firstName,
-    'lastName': lastName,
+    'name': name,
+    'bio': bio,
     'gender': gender,
-    'image': imageUrl,
+    'image_url': imageUrl,
+    'background_url': backgroundUrl,
+    'followers_count': followersCount,
+    'following_count': followingCount,
   };
 }

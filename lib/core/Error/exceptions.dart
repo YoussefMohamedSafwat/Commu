@@ -4,5 +4,4 @@ class EmptyCacheException implements Exception {}
 
 class OfflineException implements Exception {}
 
-class InvalidUserException implements Exception {
-}
+class InvalidUserException implements Exception {}

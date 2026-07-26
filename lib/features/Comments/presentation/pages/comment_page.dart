@@ -23,10 +23,14 @@ class CommentPage extends StatelessWidget {
           top: 10,
         ),
         child: BlocProvider(
-          create: (context) => di.dc<CommentBloc>()..add(GetCommentsEvent(postId: postid)),
+          create: (context) =>
+              di.dc<CommentBloc>()..add(GetCommentsEvent(postId: postid)),
           child: Column(
             children: [
-              Text("Comments", style: AppTextStyle.titleText.copyWith(fontWeight: FontWeight.w700)),
+              Text(
+                "Comments",
+                style: context.titleText.copyWith(fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 10),
 
               Expanded(child: CommentList()),

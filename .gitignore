@@ -47,3 +47,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# AI-generated docs (not for repo)
+AGENTS.md
+ARCHITECTURE.md
+POSTS_COMMENTS_REACTS_ARCHITECTURE.md
+QWEN.md
+development/
+docs/

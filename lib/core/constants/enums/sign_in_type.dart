@@ -1,0 +1,1 @@
+enum Signintype { local, google }

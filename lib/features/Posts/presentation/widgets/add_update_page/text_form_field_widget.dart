@@ -13,12 +13,12 @@ class TextFormFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+    return Card(
       child: TextFormField(
-        minLines: multiLines ? 6 : 1,
-        maxLines: multiLines ? 6 : 1,
+        minLines: multiLines ? 6 : 2,
+        maxLines: multiLines ? 6 : 2,
         controller: controller,
+        decoration: InputDecoration(hintText: name),
         validator: (val) => val!.isEmpty ? "$name Can't be empty" : null,
       ),
     );

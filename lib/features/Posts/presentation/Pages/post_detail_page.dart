@@ -28,11 +28,11 @@ class PostDetailPage extends StatelessWidget {
   Widget _buildbody(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: _columnWidget(post),
+      child: _columnWidget(context, post),
     );
   }
 
-  Widget _columnWidget(Posts post) {
+  Widget _columnWidget(BuildContext context, Posts post) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       spacing: 20,
@@ -40,13 +40,13 @@ class PostDetailPage extends StatelessWidget {
       children: [
         Text(
           post.title,
-          style: AppTextStyle.titleText.copyWith(fontSize: AppSizes.s20),
+          style: context.titleText.copyWith(fontSize: AppSizes.s20),
         ),
         Card(
           elevation: 1,
           child: Text(
             post.body,
-            style: AppTextStyle.subTitleText.copyWith(fontSize: AppSizes.s24),
+            style: context.subTitleText.copyWith(fontSize: AppSizes.s24),
           ),
         ),
         Row(

@@ -10,7 +10,7 @@ sealed class CommentEvent extends Equatable {
 class AddCommentEvent extends CommentEvent {
   final int postId;
   final String body;
-  final int userId;
+  final String userId;
   const AddCommentEvent({
     required this.postId,
     required this.body,

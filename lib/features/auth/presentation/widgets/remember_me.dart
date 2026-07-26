@@ -1,5 +1,4 @@
-import 'package:cleanarch/core/constants/app_sizes.dart';
-import 'package:cleanarch/core/theming/text_styles.dart';
+import 'package:cleanarch/core/theming/app_theme_extension.dart';
 import 'package:cleanarch/features/auth/presentation/blocs/cubit/remember_me_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,33 +14,40 @@ class RememberMeWidget extends StatefulWidget {
 class _RememberMeWidgetState extends State<RememberMeWidget> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      // Use the same horizontal padding as your AuthField widgets
-      padding: EdgeInsets.symmetric(horizontal: widget.parentWidth * 0.1),
+    return Align(
+      alignment: Alignment.centerLeft,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              Checkbox(
-                value: context.watch<RememberMeCubit>().state,
-                onChanged: (bool? value) =>
-                    context.read<RememberMeCubit>().toggle(value ?? false),
+          SizedBox(
+            height: 20,
+            width: 20,
+            child: Checkbox(
+              value: context.watch<RememberMeCubit>().state,
+              onChanged: (bool? value) =>
+                  context.read<RememberMeCubit>().toggle(value ?? false),
+              side: BorderSide(
+                color: context.isDark
+                    ? Colors.white.withValues(alpha: 0.2)
+                    : const Color(0xFFE2E8F0),
+                width: 1.5,
               ),
-              Text(
-                "Remember me",
-                style: AppTextStyle.subTitleText.copyWith(
-                  fontSize: AppSizes.s12,
-                ),
+              fillColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return context.primaryColor;
+                }
+                return Colors.transparent;
+              }),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
               ),
-            ],
-          ),
-          InkWell(
-            onTap: () {},
-            child: Text(
-              "Forgot password?",
-              style: AppTextStyle.subTitleText.copyWith(fontSize: AppSizes.s12),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            "Remember me",
+            style: TextStyle(fontSize: 13, color: context.textSecondaryColor),
           ),
         ],
       ),

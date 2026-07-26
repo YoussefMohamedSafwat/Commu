@@ -1,6 +1,5 @@
-import 'package:cleanarch/core/theming/colors.dart';
-import 'package:cleanarch/core/theming/elevated_btn_theme.dart';
 import 'package:cleanarch/core/theming/text_styles.dart';
+import 'package:cleanarch/core/theming/app_theme_extension.dart';
 import 'package:cleanarch/core/util/snackbar_message.dart';
 import 'package:cleanarch/core/widgets/loading_widget.dart';
 import 'package:cleanarch/features/Posts/presentation/blocs/add_delete_update/bloc/add_delete_update_bloc.dart';
@@ -16,13 +15,13 @@ class DeletePostBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      style: elevatedbuttonstyle.copyWith(
-        backgroundColor: WidgetStatePropertyAll(AppColors.deleteBtnColor),
+      style: context.elevatedbuttonstyle.copyWith(
+        backgroundColor: WidgetStatePropertyAll(context.deleteBtnColor),
       ),
       onPressed: () => deleteDialog(context, postId),
       icon: Icon(Icons.delete_outline),
 
-      label: Text("Delete", style: AppTextStyle.buttonText),
+      label: Text("Delete", style: context.buttonTextStyle),
     );
   }
 

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:cleanarch/core/cubit/current_user_cubit.dart';
 import 'package:cleanarch/core/routing/app_router.dart';
 import 'package:cleanarch/core/theming/app_theme.dart';
@@ -40,13 +41,13 @@ class _AppContent extends StatelessWidget {
         } else if (state is AuthLogOut) {
           context.read<CurrentUserCubit>().clearUser();
         }
-        },
+      },
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
           return MaterialApp.router(
             routerConfig: AppRouter.router,
             debugShowCheckedModeBanner: false,
-            title: 'Social Media App',
+            title: 'Commu',
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,

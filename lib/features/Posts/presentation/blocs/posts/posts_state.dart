@@ -1,26 +1,5 @@
 part of 'posts_bloc.dart';
 
-sealed class PostsState extends Equatable {
-  const PostsState();
-
-  @override
-  List<Object> get props => [];
-}
-
-final class PostsInitial extends PostsState {}
-
-final class PostsLoading extends PostsState {}
-
-final class PostsLoaded extends PostsState {
-  final List<Posts> posts;
-  int skip;
-
-  PostsLoaded({required this.posts, this.skip = 0});
-
-  @override
-  List<Object> get props => [posts];
-}
-
 final class PostLoaded extends PostsState {
   final Posts post;
 
@@ -36,4 +15,25 @@ final class PostsError extends PostsState {
   const PostsError({required this.message});
   @override
   List<Object> get props => [message];
+}
+
+final class PostsInitial extends PostsState {}
+
+final class PostsLoaded extends PostsState {
+  final List<Posts> posts;
+  int skip;
+
+  PostsLoaded({required this.posts, this.skip = 0});
+
+  @override
+  List<Object> get props => [posts];
+}
+
+final class PostsLoading extends PostsState {}
+
+sealed class PostsState extends Equatable {
+  const PostsState();
+
+  @override
+  List<Object> get props => [];
 }

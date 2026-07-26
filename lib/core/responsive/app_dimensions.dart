@@ -6,22 +6,12 @@ class AppDimensions {
 
   static double loginContainerWidth(BuildContext context) {
     if (Responsive.isDesktop(context)) {
-      return 650;
+      return 420;
     }
     return Responsive.width(context) * 0.9;
   }
 
-  static double loginContainerHeight(BuildContext context) {
-    if (Responsive.isDesktop(context)) {
-      return double.infinity;
-    }
-    return Responsive.height(context) * 0.7;
-  }
-
-  static double loginBtnWidth(BuildContext context) {
-    if (Responsive.isDesktop(context)) {
-      return 400;
-    }
-    return Responsive.height(context) * 0.8;
+  static double? loginContainerHeight(BuildContext context) {
+    return null;
   }
 }

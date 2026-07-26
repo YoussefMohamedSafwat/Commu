@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cleanarch/core/Error/exceptions.dart';
 import 'package:cleanarch/core/Error/failures.dart';
 import 'package:cleanarch/core/network/network_info.dart';
@@ -7,6 +9,7 @@ import 'package:cleanarch/features/user/data/models/user_model.dart';
 import 'package:cleanarch/features/user/domain/entities/user.dart';
 import 'package:cleanarch/features/user/domain/repositories/user_repository.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/rendering.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final LocalUserDatasource localUserDatasource;
@@ -14,7 +17,7 @@ class UserRepositoryImpl implements UserRepository {
   final NetworkInfo networkInfo;
 
   // In-memory cache to store users fetched during the session
-  final Map<int, UserModel> _memoryCache = {};
+  final Map<String, UserModel> _memoryCache = {};
 
   UserRepositoryImpl({
     required this.networkInfo,
@@ -27,6 +30,10 @@ class UserRepositoryImpl implements UserRepository {
       id: user.id,
       username: user.username,
       email: user.email,
+      name: user.name,
+      bio: user.bio,
+      gender: user.gender,
+      imageUrl: user.imageUrl,
     );
     return await localUserDatasource.cacheUser(user: userModel);
   }
@@ -47,25 +54,96 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, UserModel>> getUserById(int userId) async {
-    // 1. Check in-memory cache first
+  Future<Either<Failure, UserModel>> getUserById(String userId) async {
     if (_memoryCache.containsKey(userId)) {
       return Right(_memoryCache[userId]!);
     }
+    if (await networkInfo.isConnected) {
+      try {
+        final UserModel userModel = await remoteUserDatasource.getUserById(
+          userId,
+        );
+        _memoryCache[userId] = userModel;
+        return Right(userModel);
+      } on ServerException {
+        return Left(ServerFailure());
+      } catch (e) {
+        return Left(DefaultFailure(message: e.toString()));
+      }
+    } else {
+      return Left(OfflineFailure());
+    }
+  }
 
-    // 2. Try fetching from network, caching exceptions if they occur
+  @override
+  Future<Either<Failure, User>> updateUser({
+    required String id,
+    String? username,
+    String? name,
+    String? bio,
+    String? profileAvatar,
+    String? backgroundUrl,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      return Left(OfflineFailure());
+    }
     try {
-      final UserModel userModel = await remoteUserDatasource.getUserById(
-        userId,
+      final response = await remoteUserDatasource.updateUser(
+        id: id,
+        username: username,
+        name: name,
+        bio: bio,
+        profileAvatar: profileAvatar,
+        backgroundUrl: backgroundUrl,
       );
-      // 3. Save to in-memory cache
-      _memoryCache[userId] = userModel;
-      return Right(userModel);
-    } on ServerException {
-      return Left(ServerFailure());
+      return Right(response);
     } catch (e) {
-      // Catch socket exceptions or other network errors
-      // typically SocketException, but we catch generalized to be safe and assume it's a connectivity/server issue
+      debugPrint(e.toString());
+      return Left(DefaultFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadImage({
+    required String userId,
+    required File image,
+    required String folder,
+    String bucketName = 'avatar',
+    String? uniqueFileName,
+  }) async {
+    if (!await networkInfo.isConnected) return Left(OfflineFailure());
+
+    try {
+      final response = await remoteUserDatasource.uploadImage(
+        userId: userId,
+        image: image,
+        folder: folder,
+        bucketName: bucketName,
+        uniqueFileName: uniqueFileName,
+      );
+      return Right(response);
+    } catch (e) {
+      debugPrint(e.toString());
+      return Left(DefaultFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<User>>> getSuggestedUsers(
+    String currentUserId,
+  ) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final List<UserModel> users = await remoteUserDatasource
+            .getSuggestedUsers(currentUserId);
+        return Right(users);
+      } on ServerException {
+        return Left(ServerFailure());
+      } catch (e) {
+        debugPrint(e.toString());
+        return Left(DefaultFailure(message: e.toString()));
+      }
+    } else {
       return Left(OfflineFailure());
     }
   }

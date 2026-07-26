@@ -1,4 +1,4 @@
-import 'package:cleanarch/core/theming/colors.dart';
+import 'package:cleanarch/core/theming/app_theme_extension.dart';
 import 'package:flutter/material.dart';
 
 class NavbarItem extends StatelessWidget {
@@ -30,7 +30,7 @@ class NavbarItem extends StatelessWidget {
           child: Icon(
             isActive ? activeIcon : icon,
             key: ValueKey(isActive),
-            color: isActive ? AppColors.primaryColor : Colors.grey,
+            color: isActive ? context.primaryColor : Colors.grey,
             size: 30,
           ),
         ),

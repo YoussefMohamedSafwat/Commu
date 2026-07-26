@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:cleanarch/core/Error/exceptions.dart';
-import 'package:cleanarch/core/constants/urls.dart';
 import 'package:cleanarch/features/auth/data/models/auth_response_model.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class RemoteAuthDatasources {
   Future<AuthResponseModel> logInUser({
@@ -14,35 +13,65 @@ abstract class RemoteAuthDatasources {
     required String email,
     required String password,
   });
+  Future<AuthResponseModel> getOAuthUserData();
+  Future<bool> googleLogin();
+  Future<void> signOutUser();
+  Future<void> resetPassword(String email);
+  Future<void> updatePassword(String password);
 }
 
 class RemoteAuthDatasourcesImpl implements RemoteAuthDatasources {
-  final http.Client client;
+  final SupabaseClient client;
+
+  @override
+  Future<AuthResponseModel> getOAuthUserData() async {
+    debugPrint(
+      "============================================IN Oauth==============================================",
+    );
+    final session = client.auth.currentSession;
+    final user = client.auth.currentUser;
+
+    if (user == null || session == null) {
+      throw InvalidUserException();
+    }
+
+    final authuser = await client
+        .from('users')
+        .select()
+        .eq('id', user.id)
+        .single();
+    return AuthResponseModel.fromJson(authuser, session);
+  }
 
   RemoteAuthDatasourcesImpl({required this.client});
+  @override
+  Future<bool> googleLogin() async {
+    return await client.auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: "my-social-app://login-callback",
+      queryParams: {'prompt': 'select_account'},
+    );
+  }
+
   @override
   Future<AuthResponseModel> logInUser({
     required String username,
     required String password,
   }) async {
-    final body = {"username": username, "password": password};
-
-    final response = await client.post(
-      Uri.parse("$dummyJsonUrl/auth/login"),
-      body: body,
+    final response = await client.auth.signInWithPassword(
+      email: username,
+      password: password,
     );
 
-    if (response.statusCode == 200) {
-      final jsondata = jsonDecode(response.body);
-      return AuthResponseModel.fromJson(jsondata);
+    if (response.user != null && response.session != null) {
+      final authresponse = await client
+          .from('users')
+          .select()
+          .eq('id', response.user!.id)
+          .single();
+      return AuthResponseModel.fromJson(authresponse, response.session!);
     } else {
-      final data = jsonDecode(response.body);
-
-      if (data != null) {
-        throw InvalidUserException();
-      }
-
-      throw ServerException();
+      throw InvalidUserException();
     }
   }
 
@@ -52,23 +81,47 @@ class RemoteAuthDatasourcesImpl implements RemoteAuthDatasources {
     required String email,
     required String password,
   }) async {
-    final Map<String, String> body = {
-      "username": username,
-      "email": email,
-      "password": password,
-    };
+    try {
+      final response = await client.auth.signUp(
+        email: email,
+        password: password,
+        data: {"username": username},
+        emailRedirectTo: "my-social-app://login-callback",
+      );
 
-    final response = await client.post(
-      Uri.parse("$dummyJsonUrl/users/add"),
-      body: body,
-    );
-
-    if (response.statusCode == 201) {
-      final jsondata = jsonDecode(response.body);
-
-      return AuthResponseModel.fromJson(jsondata);
+      return AuthResponseModel.fromSupabase(response.user!, response.session);
+      // );
+    } catch (e) {
+      debugPrint(e.toString());
+      throw ServerException();
     }
+  }
 
-    throw ServerException();
+  @override
+  Future<void> signOutUser() async {
+    return await client.auth.signOut();
+  }
+
+  @override
+  Future<void> resetPassword(String email) async {
+    try {
+      await client.auth.resetPasswordForEmail(
+        email,
+        redirectTo: "my-social-app://login-callback",
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<void> updatePassword(String password) async {
+    try {
+      await client.auth.updateUser(UserAttributes(password: password));
+    } catch (e) {
+      debugPrint(e.toString());
+      throw ServerException();
+    }
   }
 }

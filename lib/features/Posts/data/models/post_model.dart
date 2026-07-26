@@ -5,9 +5,13 @@ class PostModel extends Posts {
     required super.body,
     required super.id,
     required super.title,
-    required super.tags,
+    super.tags,
+    super.imagesUrl,
     required super.views,
     required super.userId,
+    required super.createdAt,
+    required super.reactCount,
+    required super.commentCount,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -15,10 +19,26 @@ class PostModel extends Posts {
       body: json['body'],
       id: json['id'],
       title: json['title'],
-      tags: List<String>.from(json['tags']),
+      tags: List<String>.from(json['tags'] ?? []),
+      imagesUrl: List<String>.from(json['images_url'] ?? []),
       views: json['views'],
-      userId: json['userId'],
+      userId: json['user_id'],
+      createdAt: json['created_at'],
+      reactCount: json['reacts_count'],
+      commentCount: json['comments_count'],
     );
+  }
+
+  Map<String, dynamic> toJsonInsertion() {
+    return {
+      'body': body,
+      'title': title,
+      'tags': tags,
+      'images_url': imagesUrl,
+      'views': views,
+      'user_id': userId,
+      'created_at': createdAt,
+    };
   }
 
   Map<String, dynamic> toJson() {
@@ -27,8 +47,12 @@ class PostModel extends Posts {
       'body': body,
       'title': title,
       'tags': tags,
+      'images_url': imagesUrl,
       'views': views,
-      'userId': userId,
+      'user_id': userId,
+      'created_at': createdAt,
+      'reacts_count': reactCount,
+      'comments_count': commentCount,
     };
   }
 }

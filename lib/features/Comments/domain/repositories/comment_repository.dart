@@ -12,6 +12,6 @@ abstract class CommentRepository {
   Future<Either<Failure, Comment>> addComment({
     required String commentbody,
     required int postid,
-    required int userid,
+    required String userid,
   });
 }

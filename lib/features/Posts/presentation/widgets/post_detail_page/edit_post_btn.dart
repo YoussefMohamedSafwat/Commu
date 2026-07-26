@@ -1,6 +1,5 @@
-import 'package:cleanarch/core/theming/colors.dart';
-import 'package:cleanarch/core/theming/elevated_btn_theme.dart';
 import 'package:cleanarch/core/theming/text_styles.dart';
+import 'package:cleanarch/core/theming/app_theme_extension.dart';
 import 'package:cleanarch/features/Posts/domain/entities/posts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -12,8 +11,8 @@ class EditPostBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      style: elevatedbuttonstyle.copyWith(
-        backgroundColor: WidgetStatePropertyAll(AppColors.editBtnColor),
+      style: context.elevatedbuttonstyle.copyWith(
+        backgroundColor: WidgetStatePropertyAll(context.editBtnColor),
       ),
       onPressed: () {
         context.goNamed(
@@ -23,7 +22,7 @@ class EditPostBtn extends StatelessWidget {
         );
       },
       icon: Icon(Icons.edit),
-      label: Text("Edit", style: AppTextStyle.buttonText),
+      label: Text("Edit", style: context.buttonTextStyle),
     );
   }
 }

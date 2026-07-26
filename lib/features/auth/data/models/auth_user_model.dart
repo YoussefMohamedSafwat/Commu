@@ -1,15 +1,13 @@
 import 'package:cleanarch/features/auth/domain/entities/auth_user.dart';
-import 'package:uuid/uuid.dart';
-
-final uuid = Uuid();
+import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 class AuthUserModel extends AuthUser {
   AuthUserModel({required super.token, required super.refreshToken});
 
-  factory AuthUserModel.fromJson(Map<String, dynamic> json) {
+  factory AuthUserModel.fromJson(sb.Session sbSession) {
     return AuthUserModel(
-      token: json["accessToken"] ?? uuid.v4(),
-      refreshToken: json["refreshToken"] ?? uuid.v4(),
+      token: sbSession.accessToken,
+      refreshToken: sbSession.refreshToken!,
     );
   }
 

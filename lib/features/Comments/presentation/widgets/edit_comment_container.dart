@@ -28,7 +28,7 @@ class _EditCommentContainerState extends State<EditCommentContainer>
                 autoFocus: true,
               )
             : TextButton(
-                child: Text("Edit", style: AppTextStyle.normalText),
+                child: Text("Edit", style: context.normalText),
                 onPressed: () {
                   setState(() {
                     isEditing = true;

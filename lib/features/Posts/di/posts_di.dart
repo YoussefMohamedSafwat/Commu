@@ -6,22 +6,33 @@ import 'package:cleanarch/features/Posts/domain/repositories/posts_repository.da
 import 'package:cleanarch/features/Posts/domain/usecases/add_post.dart';
 import 'package:cleanarch/features/Posts/domain/usecases/delete_post.dart';
 import 'package:cleanarch/features/Posts/domain/usecases/get_all_posts.dart';
+import 'package:cleanarch/features/Posts/domain/usecases/get_liked_posts_usecase.dart';
 import 'package:cleanarch/features/Posts/domain/usecases/get_post_by_id.dart';
 import 'package:cleanarch/features/Posts/domain/usecases/get_post_by_user_id.dart';
+import 'package:cleanarch/features/Posts/domain/usecases/get_trending_posts_usecase.dart';
 import 'package:cleanarch/features/Posts/domain/usecases/update_post.dart';
 import 'package:cleanarch/features/Posts/presentation/blocs/add_delete_update/bloc/add_delete_update_bloc.dart';
 import 'package:cleanarch/features/Posts/presentation/blocs/posts/posts_bloc.dart';
 
+import 'package:cleanarch/features/Posts/domain/usecases/submit_post_usecase.dart';
+
 void initPosts() {
   //Bloc
   dc.registerFactory(
-    () => PostsBloc(getAllPostsUsecase: dc(), getPostByIdUsecase: dc(), getPostByUserIdUseCase: dc()),
+    () => PostsBloc(
+      getAllPostsUsecase: dc(),
+      getPostByIdUsecase: dc(),
+      getPostByUserIdUseCase: dc(),
+      getLikedPostsUsecase: dc(),
+      getTrendingPostsUsecase: dc(),
+    ),
   );
   dc.registerFactory(
     () => AddDeleteUpdateBloc(
       addPostuseCase: dc(),
       deletePostuseCase: dc(),
       updatePostUsecase: dc(),
+      submitPostUsecase: dc(),
     ),
   );
 
@@ -32,6 +43,11 @@ void initPosts() {
   dc.registerLazySingleton(() => UpdatePostUsecase(postsRepository: dc()));
   dc.registerLazySingleton(() => GetPostByIdUsecase(postsRepository: dc()));
   dc.registerLazySingleton(() => GetPostByUserIdUseCase(postsRepository: dc()));
+  dc.registerLazySingleton(() => GetLikedPostsUsecase(postsRepository: dc()));
+  dc.registerLazySingleton(
+    () => GetTrendingPostsUsecase(postsRepository: dc()),
+  );
+  dc.registerLazySingleton(() => SubmitPostUsecase(dc()));
 
   // repositores
   dc.registerLazySingleton<PostsRepository>(

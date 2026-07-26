@@ -44,10 +44,13 @@ class PostLocalDataSourceImpl implements PostLocalDataSource {
     final jsonString = sharedPreferences.getString(CACHED_POSTS);
     if (jsonString != null) {
       List decodeJsonData = json.decode(jsonString);
-      final PostModel jsonToPostModels = PostModel.fromJson(
-        decodeJsonData.firstWhere((item) => item['id'] == id),
+      final item = decodeJsonData.firstWhere(
+        (item) => item['id'] == id,
+        orElse: () => null,
       );
-
+      if (item == null) throw EmptyCacheException();
+      
+      final PostModel jsonToPostModels = PostModel.fromJson(item);
       return Future.value(jsonToPostModels);
     } else {
       throw EmptyCacheException();
