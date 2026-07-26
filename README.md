@@ -92,7 +92,7 @@ lib/
 - **Format code:** `dart format .`
 - **Run tests:** `flutter test`
 
-## 👨‍💻 Note to Recruiters
+## 👨‍💻 Additional notes
 
 This repository serves as a showcase of my ability to write production-ready Flutter applications. 
 Key highlights include:
