@@ -1,4 +1,4 @@
-# Social Media App
+# Commu
 
 ![Flutter](https://img.shields.io/badge/Flutter-%3E%3D3.10.0-02569B?logo=flutter)
 ![Dart](https://img.shields.io/badge/Dart-%5E3.10.0-0175C2?logo=dart)
