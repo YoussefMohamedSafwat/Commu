@@ -12,23 +12,31 @@ A Flutter social media app I built to practice shipping a full feature end-to-en
 
 ### Dark Mode
 
-| Feed | Profile | Login |
+| Login | Feed | Profile |
 |:---:|:---:|:---:|
-| <img src="project_showcase/screenshots/home-dark.png" width="250"/> | <img src="project_showcase/screenshots/profile-dark.png" width="250"/> | <img src="project_showcase/screenshots/Login-dark.png" width="250"/> |
+| <img src="project_showcase/screenshots/Login-dark.png" width="250"/> | <img src="project_showcase/screenshots/home-dark.png" width="250"/> | <img src="project_showcase/screenshots/profile-dark.png" width="250"/> |
 
 | Discover | Comments | Followers |
 |:---:|:---:|:---:|
 | <img src="project_showcase/screenshots/discover-dark.png" width="250"/> | <img src="project_showcase/screenshots/comments.png" width="250"/> | <img src="project_showcase/screenshots/followers-dark.png" width="250"/> |
 
+| Edit Post | Edit Profile | Drawer |
+|:---:|:---:|:---:|
+| <img src="project_showcase/screenshots/edit-post-dark.png" width="250"/> | <img src="project_showcase/screenshots/edit-profile-dark.png" width="250"/> | <img src="project_showcase/screenshots/drawer-dark.png" width="250"/> |
+
 ### Light Mode
 
-| Feed | Profile | Login |
+| Login | Feed | Profile |
 |:---:|:---:|:---:|
-| <img src="project_showcase/screenshots/home-light.png" width="250"/> | <img src="project_showcase/screenshots/profile-light.png" width="250"/> | <img src="project_showcase/screenshots/Login-light.png" width="250"/> |
+| <img src="project_showcase/screenshots/Login-light.png" width="250"/> | <img src="project_showcase/screenshots/home-light.png" width="250"/> | <img src="project_showcase/screenshots/profile-light.png" width="250"/> |
 
-| Followers | Drawer |
-|:---:|:---:|
-| <img src="project_showcase/screenshots/followers-light.png" width="250"/> | <img src="project_showcase/screenshots/drawer.png" width="250"/> |
+| Discover | Comments | Followers |
+|:---:|:---:|:---:|
+| <img src="project_showcase/screenshots/discover-light.png" width="250"/> | <img src="project_showcase/screenshots/comments-light.png" width="250"/> | <img src="project_showcase/screenshots/followers-light.png" width="250"/> |
+
+| Edit Post | Edit Profile | Drawer |
+|:---:|:---:|:---:|
+| <img src="project_showcase/screenshots/edit-post-light.png" width="250"/> | <img src="project_showcase/screenshots/edit-profile-light.png" width="250"/> | <img src="project_showcase/screenshots/drawer-light.png" width="250"/> |
 
 ## Features
 
